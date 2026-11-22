@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LiveMixer Streaming — User Manual</title>
+<style>
+  :root { --gold:#d9b34d; --bg:#12151b; --panel:#1b2029; --line:#2c3542; --text:#e7ecf3; --mut:#9aa6b6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font:15px/1.65 "Segoe UI",system-ui,sans-serif; }
+  header { padding:28px 20px; border-bottom:1px solid var(--line);
+           background:linear-gradient(180deg,#1d222c,var(--bg)); }
+  header h1 { margin:0; color:var(--gold); font-size:28px; }
+  header p { margin:6px 0 0; color:var(--mut); }
+  nav { position:sticky; top:0; background:#0e1116; border-bottom:1px solid var(--line);
+        padding:10px 20px; display:flex; flex-wrap:wrap; gap:8px 16px; z-index:2; }
+  nav a { color:var(--gold); text-decoration:none; font-size:13px; }
+  nav a:hover { text-decoration:underline; }
+  main { max-width:980px; margin:0 auto; padding:24px 20px 60px; }
+  h2 { color:var(--gold); border-bottom:1px solid var(--line); padding-bottom:6px; margin-top:38px; }
+  h3 { color:#cfe0f5; margin-top:24px; }
+  code { background:#0b0e13; border:1px solid var(--line); border-radius:4px;
+         padding:1px 6px; color:#8ee0a0; font-size:13px; }
+  .box { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+         padding:14px 18px; margin:14px 0; }
+  .warn { border-left:4px solid #e05a4a; }
+  .tip  { border-left:4px solid #4ac08a; }
+  .key  { border-left:4px solid var(--gold); }
+  table { width:100%; border-collapse:collapse; margin:12px 0; }
+  th,td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#202733; color:#cfe0f5; }
+  ol li, ul li { margin:6px 0; }
+  .flow { background:#0b0e13; border:1px solid var(--line); border-radius:6px;
+          padding:14px; white-space:pre-wrap; font:13px/1.5 Consolas,monospace; color:#9fd3ff; }
+  .swatch { display:inline-block; width:14px; height:14px; border-radius:3px; vertical-align:-2px; margin-right:4px; }
+  footer { color:var(--mut); text-align:center; padding:20px; border-top:1px solid var(--line); }
+  @media (max-width:600px){ header h1{font-size:22px} main{padding:16px 12px 40px} }
+</style>
+</head>
+<body>
+<header>
+  <h1>LiveMixer Streaming</h1>
+  <p>User Manual · Sound Designer by Jantonybit · version 1.0</p>
+</header>
+<nav>
+  <a href="#intro">Overview</a>
+  <a href="#req">Requirements</a>
+  <a href="#duas">Using two audio interfaces</a>
+  <a href="#toolbar">Toolbar</a>
+  <a href="#canal">Channels</a>
+  <a href="#fx">FX rack</a>
+  <a href="#master">Master</a>
+  <a href="#midi">MIDI</a>
+  <a href="#cenas">Scenes</a>
+  <a href="#config">Settings</a>
+  <a href="#trouble">Troubleshooting</a>
+</nav>
+<main>
+
+<h2 id="intro">1. Overview</h2>
+<p>LiveMixer Streaming is a virtual mixing console for Windows with low-latency ASIO. It brings
+together microphones (physical inputs of your interface), Windows audio (games, music, browser)
+and audio captured directly from specific applications, applies effects, and sends the result to
+an output called <strong>Master Out</strong>, ready for your streaming/recording software.</p>
+<div class="box key">
+<strong>Core idea:</strong> audio you capture <em>enters</em> the mixer and
+<strong>does not come back out of the PC speakers</strong>. Your streaming program listens to the
+result through Master Out. This prevents echo and feedback.
+</div>
+
+<h2 id="req">2. Requirements</h2>
+<ul>
+  <li>Windows 10 build 20348 or later (Windows 11 OK) — required for per-app capture.</li>
+  <li>An <strong>ASIO driver</strong> installed for your audio interface (e.g., UMC ASIO Driver).
+      LiveMixer does not install drivers: it only uses what is already on the system.</li>
+  <li>The application is portable: everything stays inside the project folder. Nothing to install.</li>
+</ul>
+<div class="box warn">
+The ASIO SDK is distributed under GPLv3. Closed commercial use requires a license from
+Steinberg. Check the terms before distributing the executable.
+</div>
+
+<h2 id="duas">3. Using two audio interfaces (the most common setup)</h2>
+<p>This is the most reliable way to separate what you <em>hear/show</em> from what you
+<em>capture</em>. Let us call the interfaces <strong>Board A</strong> and <strong>Board B</strong>:</p>
+<ul>
+  <li><strong>Board A — motherboard onboard audio:</strong> handles Windows sounds, the game and
+      the music player.</li>
+  <li><strong>Board B — USB interface (e.g., Behringer UMC 204):</strong> handles the microphones
+      (ASIO inputs) and the <strong>Master Out</strong> that goes to the stream.</li>
+</ul>
+
+<h3>Step by step</h3>
+<ol>
+  <li>In Windows, <em>Settings → System → Sound → Output</em>, choose <strong>Board A</strong> as the
+      default output device. Games and players will use this board.</li>
+  <li>In LiveMixer, select Board B's ASIO driver in <code>ASIO Driver</code>. Set
+      <code>Rate</code> (48 kHz recommended) and <code>Buffer</code> (128 or 256; increase if you
+      hear crackles).</li>
+  <li>In <code>PC Audio</code>, choose <strong>Board A's output</strong>. LiveMixer will loopback
+      that output and create the inputs <code>PC AUDIO L</code> and <code>PC AUDIO R</code>.</li>
+  <li>Check <code>Mute PC output</code>. Board A audio is still captured at full level, but stops
+      playing on the speakers. (The original Windows volume is restored when you stop the engine.)</li>
+  <li>In <code>Master Out</code>, choose an output of <strong>Board B</strong> — for example
+      <code>OUT 1-2</code>. Connect that output to your streaming software as an audio input.</li>
+  <li>Set up the scene: in each channel use the <code>Input</code> combo:
+      <ul>
+        <li><code>IN 1</code>, <code>IN 2</code>… = microphones on Board B (ASIO);</li>
+        <li><code>PC AUDIO L</code> / <code>PC AUDIO R</code> = game/music coming from Board A;</li>
+        <li><code>&lt;app&gt; L</code> / <code>&lt;app&gt; R</code> = a specific app captured
+            directly (use <code>Refresh apps</code> to list them).</li>
+      </ul>
+  </li>
+  <li>If you capture apps directly, check <code>Divert Windows apps</code> so they stop playing on
+      the speakers and go only to the mixer.</li>
+  <li>Click <code>START</code>.</li>
+</ol>
+
+<div class="box tip">
+<strong>Golden rule:</strong> <code>PC Audio</code> and <code>Master Out</code> must never be the
+same device — the app blocks this automatically and shows <code>FEEDBACK RISK</code> if you try.
+</div>
+
+<div class="box">
+<strong>Signal flow:</strong>
+<div class="flow">Game/Windows (Board A) ──loopback──► PC AUDIO L/R ──┐
+Specific app ──direct capture──► &lt;app&gt; L/R ───────────────────────┤
+Microphone (Board B) ──ASIO IN──► IN 1 / IN 2 ───────────────────────┤
+                                                                     ▼
+                                                      Channels → FX → Master
+                                                                     │
+                                                                     ▼
+                                                    Master Out (Board B) → Stream</div>
+</div>
+
+<h2 id="toolbar">4. Toolbar</h2>
+<table>
+  <tr><th>Control</th><th>Function</th></tr>
+  <tr><td>ASIO Driver</td><td>Chooses your interface driver (only while the engine is stopped).</td></tr>
+  <tr><td>Rate / Buffer</td><td>Sample rate and buffer size. Smaller buffer = lower latency, but more crackle risk.</td></tr>
+  <tr><td>Inputs / Outputs</td><td>Number of physical ASIO channels to open.</td></tr>
+  <tr><td>Channels</td><td>Number of strips in the mixer (1 to 16).</td></tr>
+  <tr><td>START / STOP</td><td>Turns the audio engine on/off.</td></tr>
+  <tr><td>Driver panel</td><td>Opens the manufacturer's ASIO control panel.</td></tr>
+  <tr><td>Mode</td><td><code>ASIO</code> uses the driver; <code>WASAPI</code> uses the Windows clock (no driver).</td></tr>
+  <tr><td>PC Audio</td><td>Windows output to capture via loopback.</td></tr>
+  <tr><td>Mute PC output</td><td>Mutes the captured endpoint in Windows without affecting the capture.</td></tr>
+  <tr><td>Master Out</td><td>Output where the final mix is played (should go to the stream).</td></tr>
+  <tr><td>Refresh devices</td><td>Re-reads ASIO drivers and WASAPI devices.</td></tr>
+  <tr><td>Divert Windows apps</td><td>Mutes captured apps' sessions; the captured level stays full.</td></tr>
+  <tr><td>Refresh apps</td><td>Finds apps producing audio and adds them to the <code>Input</code> combo. OBS/streaming and LiveMixer itself are ignored.</td></tr>
+  <tr><td>Save scene / Scenes</td><td>Saves or opens complete mixer setups.</td></tr>
+  <tr><td>MIDI</td><td>Opens the controller and binding panel.</td></tr>
+</table>
+<p>Indicators: <code>PC ON</code> = loopback active, <code>OUT ON</code> = Master Out active,
+<code>DIV ON</code> = app divert active, <code>APPS n</code> = n apps captured.</p>
+
+<h2 id="canal">5. Mixer channels</h2>
+<p>Each strip has, from top to bottom:</p>
+<ul>
+  <li><strong>Name</strong> and <strong>Input</strong> (see the two-interface section).</li>
+  <li><strong>Input meter</strong>, <strong>Gain</strong> (−60 to +18 dB) and <strong>Pan</strong>.</li>
+  <li><strong>HPF</strong> — fixed high-pass filter at 80 Hz (12 dB/oct). Cuts rumble, handling noise
+      and wind. Use on microphones and captures, but <strong>not</strong> on kick/bass.</li>
+  <li><strong>Ø (phase)</strong> — inverts the channel polarity.</li>
+  <li><strong>EQ</strong> — 4 bands (Low, Lo-Mid, Hi-Mid, High) with gain and frequency.</li>
+  <li><strong>FX sends</strong> — one knob per effect (Delay, Reverb, Chorus), always
+      <strong>post-fader</strong>. It sets how much of that channel goes to the effect; the effect
+      name is shown above each knob.</li>
+  <li><strong>Fader</strong> (−60 to +12 dB), <strong>M</strong> (mute) and <strong>S</strong> (solo).</li>
+</ul>
+<div class="box tip">Right-click any control to open <strong>MIDI Learn</strong> and assign a physical control.</div>
+
+<h2 id="fx">6. FX rack</h2>
+<p>Located in the column to the left of the Master, it contains three fixed modules:</p>
+<ol>
+  <li><strong>Delay</strong> — Time, Feedback and Mix.</li>
+  <li><strong>Reverb</strong> (Schroeder) — Size, Damp and Mix.</li>
+  <li><strong>Chorus</strong> — Rate, Depth and Mix.</li>
+</ol>
+<p>Each module has its own <strong>Return</strong> to the Master and a meter. Each effect's output
+goes <strong>straight to the Master</strong>, so different channels can send different amounts to
+the same effect.</p>
+<div class="flow">Channel (post-fader) ──┬── Delay  ──┐
+                     ├── Reverb ──┼──► Master ──► Master Out
+                     └── Chorus ──┘</div>
+
+<h2 id="master">7. Master</h2>
+<p>The Master fader is on the far right, with stereo meters. A soft-clip limiter is always active
+to prevent digital distortion.</p>
+<h3>Meter colors</h3>
+<p><span class="swatch" style="background:#3cdc5a"></span>Green: up to 80% ·
+   <span class="swatch" style="background:#ffcd2d"></span>Yellow: 81–93% ·
+   <span class="swatch" style="background:#eb4137"></span>Red: above 94%.</p>
+
+<h2 id="midi">8. MIDI Learn</h2>
+<ol>
+  <li>Open <code>MIDI</code> and make sure your controller shows as <em>active</em>.</li>
+  <li>Right-click the desired mixer control (fader, knob, button).</li>
+  <li>Move the matching control on your hardware. The binding appears in the list.</li>
+  <li>If the command is already in use, the conflict dialog offers <strong>Replace</strong>,
+      <strong>Use together</strong> or <strong>Cancel</strong>.</li>
+</ol>
+<p>Buttons (mute, solo, HPF, phase) use <em>latch</em> mode: pressing toggles the state, releasing
+is ignored. Bindings are saved in <code>config\midi.map</code> and with each scene.</p>
+
+<h2 id="cenas">9. Scenes</h2>
+<p>A scene saves the <strong>whole console</strong>: faders, gain, pan, mute, solo, HPF, phase, EQ,
+FX sends, FX returns, effect parameters, Master and the MIDI map.</p>
+<p>Not saved: ASIO/WASAPI routing, chosen devices, and apps' mute state (system items, not mix items).</p>
+
+<h2 id="config">10. Settings (gear icon, top right)</h2>
+<ul>
+  <li><strong>Language</strong> — Português or English. Control names and dialogs change instantly.</li>
+  <li><strong>User manual</strong> — opens this manual in the chosen language (HTML in your browser).</li>
+  <li><strong>Theme</strong> — Midnight, Gold, Ocean or Light.</li>
+</ul>
+<p>Preferences are stored in <code>config\ui.cfg</code>. The interface automatically adapts to
+smaller screens (14" notebooks), wrapping lines and resizing panels.</p>
+
+<h2 id="trouble">11. Troubleshooting</h2>
+<table>
+  <tr><th>Symptom</th><th>What to do</th></tr>
+  <tr><td>No ASIO driver appears</td><td>Install your interface driver and click <em>Refresh devices</em>.</td></tr>
+  <tr><td>Crackles / noise</td><td>Increase Buffer to 256/512 or lower the sample rate.</td></tr>
+  <tr><td>"FEEDBACK RISK"</td><td>Choose different devices for PC Audio and Master Out, or check <em>Mute PC output</em>.</td></tr>
+  <tr><td>App not listed</td><td>Play some audio in the app and click <em>Refresh apps</em> (the list also refreshes by itself).</td></tr>
+  <tr><td>App audio still on speakers</td><td>Check <em>Divert Windows apps</em>.</td></tr>
+  <tr><td>Manual does not open</td><td>Make sure the <code>docs</code> folder (or <code>bin\docs</code>) is next to the executable.</td></tr>
+</table>
+
+</main>
+<footer>LiveMixer Streaming · Sound Designer by Jantonybit · Manual v1.0</footer>
+</body>
+</html>

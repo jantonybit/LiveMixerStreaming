@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LiveMixer Streaming — Manual do Usuário</title>
+<style>
+  :root { --gold:#d9b34d; --bg:#12151b; --panel:#1b2029; --line:#2c3542; --text:#e7ecf3; --mut:#9aa6b6; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font:15px/1.65 "Segoe UI",system-ui,sans-serif; }
+  header { padding:28px 20px; border-bottom:1px solid var(--line);
+           background:linear-gradient(180deg,#1d222c,var(--bg)); }
+  header h1 { margin:0; color:var(--gold); font-size:28px; }
+  header p { margin:6px 0 0; color:var(--mut); }
+  nav { position:sticky; top:0; background:#0e1116; border-bottom:1px solid var(--line);
+        padding:10px 20px; display:flex; flex-wrap:wrap; gap:8px 16px; z-index:2; }
+  nav a { color:var(--gold); text-decoration:none; font-size:13px; }
+  nav a:hover { text-decoration:underline; }
+  main { max-width:980px; margin:0 auto; padding:24px 20px 60px; }
+  h2 { color:var(--gold); border-bottom:1px solid var(--line); padding-bottom:6px; margin-top:38px; }
+  h3 { color:#cfe0f5; margin-top:24px; }
+  code { background:#0b0e13; border:1px solid var(--line); border-radius:4px;
+         padding:1px 6px; color:#8ee0a0; font-size:13px; }
+  .box { background:var(--panel); border:1px solid var(--line); border-radius:8px;
+         padding:14px 18px; margin:14px 0; }
+  .warn { border-left:4px solid #e05a4a; }
+  .tip  { border-left:4px solid #4ac08a; }
+  .key  { border-left:4px solid var(--gold); }
+  table { width:100%; border-collapse:collapse; margin:12px 0; }
+  th,td { border:1px solid var(--line); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#202733; color:#cfe0f5; }
+  ol li, ul li { margin:6px 0; }
+  .flow { background:#0b0e13; border:1px solid var(--line); border-radius:6px;
+          padding:14px; white-space:pre-wrap; font:13px/1.5 Consolas,monospace; color:#9fd3ff; }
+  .swatch { display:inline-block; width:14px; height:14px; border-radius:3px; vertical-align:-2px; margin-right:4px; }
+  footer { color:var(--mut); text-align:center; padding:20px; border-top:1px solid var(--line); }
+  @media (max-width:600px){ header h1{font-size:22px} main{padding:16px 12px 40px} }
+</style>
+</head>
+<body>
+<header>
+  <h1>LiveMixer Streaming</h1>
+  <p>Manual do usuário · Sound Designer by Jantonybit · versão 1.0</p>
+</header>
+<nav>
+  <a href="#intro">Visão geral</a>
+  <a href="#req">Requisitos</a>
+  <a href="#duas">Usando duas placas de áudio</a>
+  <a href="#toolbar">Barra de ferramentas</a>
+  <a href="#canal">Canais</a>
+  <a href="#fx">Rack de efeitos</a>
+  <a href="#master">Master</a>
+  <a href="#midi">MIDI</a>
+  <a href="#cenas">Cenas</a>
+  <a href="#config">Configurações</a>
+  <a href="#trouble">Solução de problemas</a>
+</nav>
+<main>
+
+<h2 id="intro">1. Visão geral</h2>
+<p>O LiveMixer Streaming é uma mesa de mistura virtual para Windows com ASIO de baixa latência.
+Ele reúne microfones (entradas físicas da sua interface), o áudio do Windows (jogos, músicas,
+navegador) e o áudio capturado diretamente de aplicativos específicos, aplica efeitos e envia o
+resultado para uma saída chamada <strong>Master Out</strong>, pronta para ser usada pelo seu
+software de streaming/gravação.</p>
+<div class="box key">
+<strong>Ideia central:</strong> o áudio que você captura <em>entra</em> na mesa e
+<strong>não volta a sair nas caixas do PC</strong>. Quem ouve o resultado é o seu programa de
+stream, através do Master Out. Isso evita eco e realimentação.
+</div>
+
+<h2 id="req">2. Requisitos</h2>
+<ul>
+  <li>Windows 10 build 20348 ou superior (Windows 11 OK) — necessário para captura por aplicativo.</li>
+  <li>Um <strong>driver ASIO</strong> instalado para a sua interface de áudio (ex.: UMC ASIO Driver).
+      O LiveMixer não instala drivers: ele apenas usa o que já estiver no sistema.</li>
+  <li>O aplicativo é portátil: tudo fica dentro da pasta do projeto. Não é preciso instalar nada.</li>
+</ul>
+<div class="box warn">
+O SDK ASIO é distribuído sob GPLv3. Para uso comercial fechado é necessária licença junto à
+Steinberg. Consulte os termos antes de distribuir o executável.
+</div>
+
+<h2 id="duas">3. Usando duas placas de áudio (o cenário mais comum)</h2>
+<p>Esta é a forma mais estável de separar o que você <em>ouve/mostra</em> do que você
+<em>captura</em>. Vamos chamar as placas de <strong>Placa A</strong> e <strong>Placa B</strong>:</p>
+<ul>
+  <li><strong>Placa A — integrada da placa-mãe (onboard):</strong> fica com os sons do Windows,
+      do jogo e do player de música.</li>
+  <li><strong>Placa B — interface USB (ex.: Behringer UMC 204):</strong> fica com os microfones
+      (entradas ASIO) e com o <strong>Master Out</strong> que vai para o streaming.</li>
+</ul>
+
+<h3>Passo a passo</h3>
+<ol>
+  <li>No Windows, em <em>Configurações → Som → Saída</em>, escolha a <strong>Placa A</strong> como
+      dispositivo de saída padrão. Jogos e players usarão essa placa.</li>
+  <li>No LiveMixer, selecione o driver ASIO da <strong>Placa B</strong> em
+      <code>Driver ASIO</code>. Ajuste <code>Taxa</code> (48 kHz recomendado) e
+      <code>Buffer</code> (128 ou 256; aumente se houver estalos).</li>
+  <li>Em <code>Audio do PC</code>, escolha a <strong>saída da Placa A</strong>. O LiveMixer fará
+      loopback dessa saída e criará as entradas <code>AUDIO PC L</code> e <code>AUDIO PC R</code>.</li>
+  <li>Marque <code>Nao ouvir no PC</code>. O som da Placa A continua sendo capturado em nível
+      cheio, mas para de sair nas caixas. (O volume original do Windows é restaurado ao parar
+      o motor.)</li>
+  <li>Em <code>Master Out</code>, escolha uma saída da <strong>Placa B</strong> — por exemplo
+      <code>OUT 1-2</code>. Conecte essa saída ao seu software de stream como entrada de áudio.</li>
+  <li>Configure a cena: em cada canal, use o combo <code>Entrada</code>:
+      <ul>
+        <li><code>IN 1</code>, <code>IN 2</code>… = microfones na Placa B (ASIO);</li>
+        <li><code>AUDIO PC L</code> / <code>AUDIO PC R</code> = jogo/música vindos da Placa A;</li>
+        <li><code>&lt;app&gt; L</code> / <code>&lt;app&gt; R</code> = um aplicativo específico
+            capturado diretamente (use <code>Atualizar apps</code> para listá-los).</li>
+      </ul>
+  </li>
+  <li>Se capturar apps diretamente, marque <code>Desviar apps do Windows</code> para que eles
+      parem de tocar nas caixas e sigam somente para a mesa.</li>
+  <li>Clique em <code>INICIAR</code>.</li>
+</ol>
+
+<div class="box tip">
+<strong>Regra de ouro:</strong> <code>Audio do PC</code> e <code>Master Out</code> nunca podem ser
+o mesmo dispositivo — o aplicativo bloqueia isso automaticamente e mostra
+<code>RISCO DE REALIMENTACAO</code> se você tentar.
+</div>
+
+<div class="box">
+<strong>Caminho do sinal:</strong>
+<div class="flow">Jogo/Windows (Placa A) ──loopback──► AUDIO PC L/R ──┐
+App específico ──captura direta──► &lt;app&gt; L/R ───────────────────┤
+Microfone (Placa B) ──ASIO IN────► IN 1 / IN 2 ────────────────────┤
+                                                                    ▼
+                                                     Canais → Efeitos → Master
+                                                                    │
+                                                                    ▼
+                                                   Master Out (Placa B) → Stream</div>
+</div>
+
+<h2 id="toolbar">4. Barra de ferramentas</h2>
+<table>
+  <tr><th>Controle</th><th>Função</th></tr>
+  <tr><td>Driver ASIO</td><td>Escolhe o driver da sua interface (somente com o motor parado).</td></tr>
+  <tr><td>Taxa / Buffer</td><td>Taxa de amostragem e tamanho do buffer. Buffer menor = menor latência, mas mais risco de estalos.</td></tr>
+  <tr><td>Entradas / Saídas</td><td>Quantidade de canais físicos ASIO a abrir.</td></tr>
+  <tr><td>Canais</td><td>Número de faixas na mesa (1 a 16).</td></tr>
+  <tr><td>INICIAR / PARAR</td><td>Liga/desliga o motor de áudio.</td></tr>
+  <tr><td>Painel do driver</td><td>Abre o painel de controle do fabricante do driver ASIO.</td></tr>
+  <tr><td>Modo</td><td><code>ASIO</code> usa o driver; <code>WASAPI</code> usa o relógio do Windows (sem driver).</td></tr>
+  <tr><td>Audio do PC</td><td>Saída do Windows a ser capturada por loopback.</td></tr>
+  <tr><td>Nao ouvir no PC</td><td>Silencia o endpoint capturado no Windows, sem afetar a captura.</td></tr>
+  <tr><td>Master Out</td><td>Saída onde o mix final é tocado (deve ir para o stream).</td></tr>
+  <tr><td>Atualizar disp.</td><td>Relê drivers ASIO e dispositivos WASAPI.</td></tr>
+  <tr><td>Desviar apps do Windows</td><td>Muta as sessões dos apps capturados; o nível capturado permanece cheio.</td></tr>
+  <tr><td>Atualizar apps</td><td>Procura apps gerando áudio e os adiciona ao combo <code>Entrada</code>. OBS/streaming e o próprio LiveMixer são ignorados.</td></tr>
+  <tr><td>Salvar cena / Cenas</td><td>Salva ou abre configurações completas da mesa.</td></tr>
+  <tr><td>MIDI</td><td>Abre o painel de controladores e associações MIDI.</td></tr>
+</table>
+<p>Indicadores: <code>PC ON</code> = loopback ativo, <code>OUT ON</code> = Master Out ativo,
+<code>DIV ON</code> = desvio de apps ativo, <code>APPS n</code> = n aplicativos capturados.</p>
+
+<h2 id="canal">5. Canais da mesa</h2>
+<p>Cada faixa tem, de cima para baixo:</p>
+<ul>
+  <li><strong>Nome</strong> e <strong>Entrada</strong> (veja a seção das duas placas).</li>
+  <li><strong>Medidor de entrada</strong>, <strong>Ganho</strong> (−60 a +18 dB) e <strong>Pan</strong>.</li>
+  <li><strong>HPF</strong> — filtro passa-alta fixo em 80 Hz (12 dB/oitava). Corta graves,
+      ruído de manuseio e vento. Use em microfones e capturas, mas <strong>não</strong> em kick/baixo.</li>
+  <li><strong>Ø (fase)</strong> — inverte a polaridade do canal.</li>
+  <li><strong>Equalização</strong> — 4 bandas (Low, Lo-Mid, Hi-Mid, High) com ganho e frequência.</li>
+  <li><strong>Envios p/ efeitos</strong> — um knob por efeito (Delay, Reverb, Chorus), sempre
+      <strong>pós-fader</strong>. Ele define quanto daquele canal vai para o efeito; o nome do
+      efeito aparece acima de cada knob.</li>
+  <li><strong>Fader</strong> (−60 a +12 dB), <strong>M</strong> (mute) e <strong>S</strong> (solo).</li>
+</ul>
+<div class="box tip">Clique com o botão direito em qualquer controle para abrir o <strong>MIDI Learn</strong>
+e associar um controle físico.</div>
+
+<h2 id="fx">6. Rack de efeitos</h2>
+<p>Fica na coluna à esquerda do Master e contém três módulos fixos:</p>
+<ol>
+  <li><strong>Delay</strong> — Tempo, Feedback e Mix.</li>
+  <li><strong>Reverb</strong> (Schroeder) — Tamanho, Damp e Mix.</li>
+  <li><strong>Chorus</strong> — Taxa, Profundidade e Mix.</li>
+</ol>
+<p>Cada módulo tem seu próprio <strong>Retorno</strong> ao Master e um medidor. A saída de cada
+efeito vai <strong>direto para o Master</strong>, permitindo que diferentes canais enviem
+quantidades diferentes para o mesmo efeito.</p>
+<div class="flow">Canal (pós-fader) ──┬── Delay  ──┐
+                    ├── Reverb ──┼──► Master ──► Master Out
+                    └── Chorus ──┘</div>
+
+<h2 id="master">7. Master</h2>
+<p>O fader Master fica no extremo direito, com medidores estéreo. Há um limitador suave
+(<em>soft clip</em>) sempre ativo para evitar distorção digital.</p>
+<h3>Cores dos medidores</h3>
+<p><span class="swatch" style="background:#3cdc5a"></span>Verde: até 80% ·
+   <span class="swatch" style="background:#ffcd2d"></span>Amarelo: 81–93% ·
+   <span class="swatch" style="background:#eb4137"></span>Vermelho: acima de 94%.</p>
+
+<h2 id="midi">8. MIDI Learn</h2>
+<ol>
+  <li>Abra <code>MIDI</code> e confirme que seu controlador aparece como <em>ativo</em>.</li>
+  <li>Clique com o botão direito no controle desejado da mesa (fader, knob, botão).</li>
+  <li>Mova o controle correspondente no seu hardware. A associação aparece na lista.</li>
+  <li>Se o comando já estiver em uso, o diálogo de conflito oferece
+      <strong>Substituir</strong>, <strong>Usar em conjunto</strong> ou <strong>Cancelar</strong>.</li>
+</ol>
+<p>Botões (mute, solo, HPF, fase) funcionam em modo <em>latch</em>: pressionar alterna o estado,
+soltar é ignorado. As associações são salvas em <code>config\midi.map</code> e junto com cada cena.</p>
+
+<h2 id="cenas">9. Cenas</h2>
+<p>Uma cena salva <strong>toda a mesa</strong>: faders, ganho, pan, mute, solo, HPF, fase, EQ,
+envios de efeito, retornos, parâmetros dos efeitos, Master e o mapa MIDI.</p>
+<p>Não são salvos: roteamento ASIO/WASAPI, dispositivos escolhidos e o estado de mute dos apps
+(itens de sistema, não de mistura).</p>
+
+<h2 id="config">10. Configurações (engrenagem no canto superior direito)</h2>
+<ul>
+  <li><strong>Idioma</strong> — Português ou English. Nomes de controles e diálogos mudam na hora.</li>
+  <li><strong>Manual do usuário</strong> — abre este manual na língua escolhida (HTML no navegador).</li>
+  <li><strong>Tema</strong> — Meia-noite, Dourado, Oceano ou Claro.</li>
+</ul>
+<p>As preferências ficam em <code>config\ui.cfg</code>. A interface se adapta automaticamente a
+telas menores (notebooks de 14"), quebrando linhas e redimensionando os painéis.</p>
+
+<h2 id="trouble">11. Solução de problemas</h2>
+<table>
+  <tr><th>Sintoma</th><th>O que fazer</th></tr>
+  <tr><td>Nenhum driver ASIO aparece</td><td>Instale o driver da sua interface e clique em <em>Atualizar disp.</em></td></tr>
+  <tr><td>Estalos / ruídos</td><td>Aumente o Buffer para 256/512 ou reduza a taxa.</td></tr>
+  <tr><td>"RISCO DE REALIMENTACAO"</td><td>Escolha dispositivos diferentes para Audio do PC e Master Out, ou marque <em>Nao ouvir no PC</em>.</td></tr>
+  <tr><td>App não aparece na lista</td><td>Toque uma música no app e clique em <em>Atualizar apps</em> (a lista também atualiza sozinha).</td></tr>
+  <tr><td>Som do app ainda sai nas caixas</td><td>Marque <em>Desviar apps do Windows</em>.</td></tr>
+  <tr><td>Manual não abre</td><td>Verifique se a pasta <code>docs</code> (ou <code>bin\docs</code>) está junto do executável.</td></tr>
+</table>
+
+</main>
+<footer>LiveMixer Streaming · Sound Designer by Jantonybit · Manual v1.0</footer>
+</body>
+</html>
