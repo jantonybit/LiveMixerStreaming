@@ -5,7 +5,8 @@ Este arquivo acompanha o pacote `LiveMixerStreaming_1.0.0.0_x64.msix`.
 ## Código do aplicativo
 
 Copyright (c) 2026 Jantonybit. Licenciado sob GNU General Public License v3.0.
-Texto completo: https://www.gnu.org/licenses/gpl-3.0.html
+O texto integral da GPLv3 acompanha o pacote no arquivo `docs/GPL-3.0.txt` e também está
+disponível em https://www.gnu.org/licenses/gpl-3.0.html
 Código-fonte completo correspondente: https://github.com/Jantonybit/LiveMixerStreaming
 
 ## Componentes incluídos no executável

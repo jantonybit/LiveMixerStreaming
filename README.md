@@ -21,7 +21,7 @@ exigido pela licença GPLv3:
   compilados no executável;
 - `CMakeLists.txt`, `scripts/` — arquivos de build;
 - `docs/` — manuais PT-BR/EN;
-- `LICENSE.md`, `THIRD_PARTY_NOTICES.md` — licenças e avisos.
+- `LICENSE.md`, `GPL-3.0.txt`, `THIRD_PARTY_NOTICES.md` — licenças e avisos.
 
 > **ASIO is a registered trademark of Steinberg Media Technologies GmbH.**
 > Os drivers ASIO de fabricantes de hardware **não** são redistribuídos neste repositório;
