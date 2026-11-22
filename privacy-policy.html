@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="index, follow">
+<title>Política de Privacidade — LiveMixer Streaming</title>
+<style>
+  :root {
+    --bg: #0c0f16;
+    --card: #151a25;
+    --line: #2a3345;
+    --text: #eef1f7;
+    --muted: #a8b2c4;
+    --gold: #d9b34d;
+    --red: #eb4137;
+    --green: #3cdc5a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 16px/1.7 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  header {
+    padding: 46px 24px 34px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(135deg, #1b2130, #0c0f16);
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 24px; }
+  header .wrap { padding: 0; }
+  h1 { font-size: 2rem; line-height: 1.2; margin: 0 0 10px; color: var(--gold); }
+  .sub { color: var(--muted); margin: 0; font-size: .95rem; }
+  main { padding: 32px 24px 72px; }
+  .summary {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-left: 4px solid var(--gold);
+    border-radius: 10px;
+    padding: 18px 22px;
+    margin-bottom: 28px;
+  }
+  .summary strong { color: var(--gold); }
+  section { margin: 0 0 30px; }
+  h2 { font-size: 1.18rem; color: var(--gold); margin: 0 0 10px; }
+  p, li { color: var(--text); }
+  ul { padding-left: 22px; margin: 10px 0; }
+  li { margin: 5px 0; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: .94rem; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--gold); font-weight: 600; }
+  code { background: #20283a; border-radius: 4px; padding: 1px 5px; font-size: .9em; }
+  .note { color: var(--muted); font-size: .92rem; }
+  footer { border-top: 1px solid var(--line); padding: 22px 24px 40px; color: var(--muted); font-size: .88rem; }
+  footer .wrap { padding: 0; }
+  @media (max-width: 620px) { table, thead, tbody, tr, th, td { display: block; } thead { display: none; } td { border: 0; padding: 4px 0; } td::before { content: attr(data-label) ": "; color: var(--muted); } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>Política de Privacidade</h1>
+    <p class="sub">LiveMixer Streaming · Sound Designer by Jantonybit</p>
+    <p class="sub">Vigente desde 22/11/2026 · Versão 1.0 · Publicador: Jantonybit</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="summary">
+    O <strong>LiveMixer Streaming</strong> roda <strong>inteiramente no seu computador</strong>.
+    Ele <strong>não cria conta, não coleta dados pessoais, não envia telemetria, não exibe
+    anúncios</strong> e não grava nem transmite seu áudio para lugar algum. O áudio é
+    processado em memória e entregue às saídas que você escolher no app.
+  </div>
+
+  <section id="responsavel">
+    <h2>1. Quem é o responsável</h2>
+    <p>O aplicativo é publicado por <strong>Jantonybit</strong> na Microsoft Store, com a
+      identidade <code>Jantonybit.LiveMixerStreaming</code>. Esta política explica o que
+      acontece com as informações quando você usa o LiveMixer Streaming. Em caso de dúvidas,
+      abra uma <em>Issue</em> no repositório do projeto no GitHub (link na página da Store).</p>
+  </section>
+
+  <section id="dados">
+    <h2>2. Dados que coletamos</h2>
+    <p><strong>Nenhum.</strong> Não há:</p>
+    <ul>
+      <li>cadastro ou login;</li>
+      <li>telemetria, analytics, relatórios de falhas ou contadores de uso;</li>
+      <li>cookies, identificadores de publicidade ou SDKs de terceiros;</li>
+      <li>acesso a contatos, arquivos pessoais, localização, câmera ou galeria;</li>
+      <li>transferência de áudio, texto ou qualquer outro conteúdo para servidores.</li>
+    </ul>
+    <p>O aplicativo é <strong>gratuito</strong>, não contém compras dentro do app e não pede
+      doações.</p>
+  </section>
+
+  <section id="audio">
+    <h2>3. Áudio e dispositivos (permissão de microfone)</h2>
+    <p>Para funcionar como mesa de som, o app solicita acesso a dispositivos de áudio:</p>
+    <table>
+      <thead><tr><th>Acesso</th><th>Para que serve</th><th>Para onde vai o áudio</th></tr></thead>
+      <tbody>
+        <tr>
+          <td data-label="Acesso">Entradas ASIO / WASAPI</td>
+          <td data-label="Serve para">Receber os sinais das faixas do mixer (microfones e interface de áudio)</td>
+          <td data-label="Destino">Processado em memória; sai pelas saídas ASIO e/ou <strong>Master Out</strong> escolhidas por você</td>
+        </tr>
+        <tr>
+          <td data-label="Acesso">Loopback de reprodução WASAPI</td>
+          <td data-label="Serve para">Capturar o som que o Windows envia a um dispositivo ("Audio do PC")</td>
+          <td data-label="Destino">Mesmo processamento local; nunca salvo em disco</td>
+        </tr>
+        <tr>
+          <td data-label="Acesso">Captura por aplicativo</td>
+          <td data-label="Serve para">Capturar separadamente o áudio de um programa que esteja tocando</td>
+          <td data-label="Destino">Mesmo processamento local; apps de streaming e o próprio LiveMixer são ignorados</td>
+        </tr>
+        <tr>
+          <td data-label="Acesso">Dispositivos MIDI</td>
+          <td data-label="Serve para">Controlar parâmetros com controladores físicos</td>
+          <td data-label="Destino">Apenas comandos locais; nada é enviado pela rede</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>O áudio <strong>não</strong> é arquivado, codificado para upload nem usado para treinar
+      modelos. As opções <strong>"Nao ouvir no PC"</strong> e <strong>"Desviar apps do Windows"</strong>
+      apenas silenciam temporariamente dispositivos/sessões do Windows enquanto o motor está
+      ativo e <strong>restauram o estado original</strong> ao parar ou ao fechar o app.</p>
+    <p class="note">Para o modo de baixa latência é necessário ter um driver ASIO instalado pelo
+      fabricante da interface. O LiveMixer Streaming não instala drivers nem redistribui
+      drivers de terceiros.</p>
+  </section>
+
+  <section id="armazenamento">
+    <h2>4. Dados salvos no seu computador</h2>
+    <p>O app salva apenas configurações de uso, em arquivos de texto na pasta da aplicação
+      (quando instalado via MSIX, no armazenamento local virtualizado do pacote):</p>
+    <ul>
+      <li><code>config\ui.cfg</code> — idioma, tema e microfone preferido;</li>
+      <li><code>config\mixer.cfg</code> — níveis, efeitos, rotas e envios das faixas;</li>
+      <li><code>config\midi.map</code> — mapeamento de MIDI Learn;</li>
+      <li><code>config\promos.cfg</code> — links de cross-promotion;</li>
+      <li><code>config\scenes\*</code> — cenas criadas por você.</li>
+    </ul>
+    <p>Esses arquivos <strong>nunca são enviados</strong>. Para removê-los, desinstale o
+      aplicativo ou apague a pasta <code>config</code> da instalação.</p>
+  </section>
+
+  <section id="internet">
+    <h2>5. Internet e links</h2>
+    <p>O aplicativo <strong>não faz requisições de rede por conta própria</strong>. A única
+      ação relacionada à internet é abrir, mediante <strong>clique explícito seu</strong>,
+      páginas da Microsoft Store (links de outros apps do publicador) no aplicativo da Store
+      ou no navegador padrão do Windows. Os links ficam em <code>config\promos.cfg</code> e
+      podem ser apagados por você. Não há pop-ups automáticos nem abertura de links sem
+      interação.</p>
+  </section>
+
+  <section id="terceiros">
+    <h2>6. Compartilhamento com terceiros</h2>
+    <p>Não compartilhamos dados com terceiros. Não há redes de anúncios, serviços de
+      analytics, serviços de nuvem nem processadores de pagamento dentro do app. A Microsoft
+      pode tratar informações referentes à sua conta Microsoft e à instalação conforme a
+      política da Microsoft Store, pois a distribuição é feita por lá.</p>
+  </section>
+
+  <section id="criancas">
+    <h2>7. Crianças</h2>
+    <p>O aplicativo não é direcionado a menores de 13 anos e não coleta informações de
+      crianças.</p>
+  </section>
+
+  <section id="alteracoes">
+    <h2>8. Alterações</h2>
+    <p>Se esta política mudar, a nova versão será publicada neste mesmo endereço com a data
+      atualizada no topo.</p>
+  </section>
+
+  <section id="contato">
+    <h2>9. Contato</h2>
+    <p>Dúvidas ou solicitações relacionadas à privacidade devem ser registradas como
+      <em>Issue</em> no repositório do LiveMixer Streaming no GitHub, cujo endereço está na
+      página da Store.</p>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">LiveMixer Streaming · Sound Designer by Jantonybit · Política de Privacidade v1.0</div>
+</footer>
+
+</body>
+</html>
